@@ -30,6 +30,10 @@ osx:
 	ADDON_INCLUDES_EXCLUDE = libs/%
 	ADDON_SOURCES =
 
+msys2:
+	# Enable SSSE3 path in SpoutCopy when available on target CPUs
+	ADDON_CFLAGS = -mssse3
+
 ios:
 	ADDON_SOURCES_EXCLUDE = libs/%
 	ADDON_INCLUDES_EXCLUDE = libs/%
