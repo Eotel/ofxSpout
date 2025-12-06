@@ -879,6 +879,7 @@ void spoutCopy::rgb2bgra(const void *rgb_source, void *bgra_dest,
 //
 
 //---------------------------------------------------------
+#if defined(__SSSE3__)
 // Function: rgb_to_bgrx_sse
 // Experimental pending testing
 // Single line function
@@ -950,6 +951,26 @@ void spoutCopy::rgb_to_bgrx_sse(unsigned int npixels, const void* rgb_source, vo
 	}
 
 } // end rgb_to_bgrx_sse
+#else
+// Fallback implementation when SSSE3 is unavailable (e.g. MinGW default flags)
+void spoutCopy::rgb_to_bgrx_sse(unsigned int npixels, const void* rgb_source, void* bgrx_dest) const
+{
+	auto rgb = static_cast<const unsigned char*>(rgb_source);
+	auto bgra = static_cast<unsigned char*>(bgrx_dest);
+	if (!rgb || !bgra) return;
+
+	// npixels parameter is byte count (width*3); convert to pixel count
+	const unsigned int pixels = npixels / 3;
+	for (unsigned int i = 0; i < pixels; ++i) {
+		bgra[0] = rgb[2];
+		bgra[1] = rgb[1];
+		bgra[2] = rgb[0];
+		bgra[3] = 255;
+		rgb  += 3;
+		bgra += 4;
+	}
+}
+#endif
 
 
 //---------------------------------------------------------
@@ -962,6 +983,7 @@ void spoutCopy::rgb_to_bgra_sse3 (
 	unsigned int width, 
 	unsigned int height) const
 {
+#if defined(__SSSE3__)
 	if ((width % 16) != 0)
 		return;
 
@@ -975,6 +997,10 @@ void spoutCopy::rgb_to_bgra_sse3 (
 		rgb  += width*3;
 		rgba += width*4;
 	}
+#else
+	// Fallback: scalar conversion when SSSE3 is unavailable
+	rgb2bgra(rgb_source, rgba_dest, width, height, false);
+#endif
 
 } // end rgb_to_bgra_sse3
 
