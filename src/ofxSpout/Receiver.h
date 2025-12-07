@@ -3,6 +3,7 @@
 #include "ofLog.h"
 #include "ofTexture.h"
 #include <string>
+#include <vector>
 
 class SpoutReceiver;
 
@@ -23,6 +24,12 @@ namespace ofxSpout {
 		std::string getChannelName() const;
 		float getWidth() const;
 		float getHeight() const;
+
+		// Sender enumeration methods
+		void setReceiverName(const std::string& name);
+		int getSenderCount() const;
+		std::string getSenderName(int index) const;
+		std::vector<std::string> getSenderList() const;
 
 	protected:
 		SpoutReceiver * spoutReceiver;

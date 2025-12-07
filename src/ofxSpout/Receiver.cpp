@@ -133,4 +133,38 @@ namespace ofxSpout {
 		}
 		return 0;
 	}
+
+	//----------
+	void Receiver::setReceiverName(const std::string& name) {
+		if (this->isInitialized()) {
+			this->spoutReceiver->SetReceiverName(name.c_str());
+		}
+	}
+
+	//----------
+	int Receiver::getSenderCount() const {
+		if (this->isInitialized()) {
+			return this->spoutReceiver->GetSenderCount();
+		}
+		return 0;
+	}
+
+	//----------
+	std::string Receiver::getSenderName(int index) const {
+		if (this->isInitialized()) {
+			char name[256];
+			if (this->spoutReceiver->GetSender(index, name, 256)) {
+				return std::string(name);
+			}
+		}
+		return "";
+	}
+
+	//----------
+	std::vector<std::string> Receiver::getSenderList() const {
+		if (this->isInitialized()) {
+			return this->spoutReceiver->GetSenderList();
+		}
+		return {};
+	}
 }
