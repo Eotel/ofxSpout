@@ -33,6 +33,8 @@ osx:
 msys2:
 	# Enable SSSE3 path in SpoutCopy when available on target CPUs
 	ADDON_CFLAGS = -mssse3
+	# Link required Windows/DirectX libraries (MinGW doesn't process #pragma comment)
+	ADDON_LDFLAGS = -ld3d11 -ldxgi -lversion
 
 ios:
 	ADDON_SOURCES_EXCLUDE = libs/%
